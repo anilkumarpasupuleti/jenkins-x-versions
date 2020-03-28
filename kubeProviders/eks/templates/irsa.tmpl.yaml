@@ -8,22 +8,28 @@ metadata:
 iam:
   withOIDC: true
   serviceAccounts:
-{{- if .IAM.TektonBotPolicy }}
   - metadata:
       name: tekton-bot
       namespace: jx
       labels: {aws-usage: "jenkins-x"}
     attachPolicyARNs:
-    - {{.IAM.TektonBotPolicy | quote}}
-{{- end }}
-{{- if .IAM.ExternalDNSPolicy }}
+    - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
   - metadata:
       name: external-dns-external-dns
       namespace: jx
       labels: {aws-usage: "jenkins-x"}
-    attachPolicyARNs:
-    - {{.IAM.ExternalDNSPolicy | quote}}
-{{- end }}
+    attachPolicy:
+      Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - route53:ChangeResourceRecordSets
+          Resource: "arn:aws:route53:::hostedzone/*"
+        - Effect: Allow
+          Action:
+          - route53:ListHostedZones
+          - route53:ListResourceRecordSets
+          Resource: "*"
 {{- if .IAM.CertManagerPolicy }}
   - metadata:
       name: cert-manager-cert-manager
