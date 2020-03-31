@@ -1,0 +1,19 @@
+{{- if eq "eks" .Values.jxRequirements.cluster.provider }}
+autoDiscovery: 
+  clusterName: {{ .Values.jxRequirements.cluster.provider }}
+awsRegion: {{ .Values.jxRequirements.cluster.region }}
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+    name: cluster-autoscaler
+    serviceAccountAnnotations: eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.jxRequirements.cluster.project }}:role/{{ .Values.jxRequirements.cluster.clusterName }}-cluster-autoscaler-cluster-autoscaler
+
+
+
+
+
+
+
+
+
